@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/comment_title_layout"/>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <include layout="@layout/bot_type_top"/>
+
+        <ListView
+            android:id="@+id/wearhouseistView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="#6E7B8B"
+            android:dividerHeight="1dp" >
+        </ListView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dip"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="总计:"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#6E7B8B" />
+
+            <TextView
+                android:id="@+id/wearhousetotalcodesTv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:id="@+id/vercardShowTv"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/wearhouseNoBotSubBtn"
+            android:layout_width="@dimen/_0dp"
+            android:layout_weight="1"
+            android:text="无瓶回单"
+            android:visibility="gone"
+            android:background="@drawable/comment_bt_select"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/wearhouseSubBtn"
+            android:layout_width="@dimen/_0dp"
+            android:layout_weight="1"
+            android:text="提交"
+            android:background="@drawable/comment_bt_select"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

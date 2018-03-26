@@ -1,0 +1,105 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.3'
+    defaultConfig {
+        applicationId "com.sucheng.gas"
+        minSdkVersion 18
+        targetSdkVersion 22
+        versionCode 7
+        versionName "1.0.7"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('F:\\daojiaogaskey\\daojiaogaskey.jks')//签名文件路径
+            storePassword RELEASE_KEY_PWD
+            keyAlias RELEASE_ALAIS
+            keyPassword RELEASE_ALAIS_PWD  //签名密码
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        daojiaogas {
+            buildConfigField "int", "ENV_TYPE", "1"
+            applicationId "com.sucheng.gas"
+            manifestPlaceholders = [app_name: "道滘株洲燃气", app_icon: "@drawable/ic_launcher"]
+            versionCode 7
+            versionName "1.0.7"
+        }
+        hengyuangas {
+            buildConfigField "int", "ENV_TYPE", "2"
+            applicationId "com.sucheng.hengyuangas"
+            manifestPlaceholders = [app_name: "恒源燃气", app_icon: "@drawable/ic_launcher"]
+            versionCode 7
+            versionName "1.0.7"
+        }
+        huayanggas{
+            buildConfigField "int","ENV_TYPE","3"
+            applicationId "com.sucheng.huayanggas"
+            manifestPlaceholders = [app_name: "华洋燃气",app_icon: "@drawable/icon_huayanggas"]
+            versionCode 7
+            versionName "1.0.7"
+        }
+        changpingchangtaigas{
+            buildConfigField "int","ENV_TYPE","4"
+            applicationId "com.sucheng.cpctgas"
+            manifestPlaceholders = [app_name: "华洋燃气",app_icon: "@drawable/ic_launcher"]
+            versionCode 7
+            versionName "1.0.7"
+        }
+
+        ztzygas{
+            buildConfigField "int","ENV_TYPE","5"
+            applicationId "com.sucheng.ztzygas"
+            manifestPlaceholders = [app_name: "中堂中液",app_icon: "@drawable/ic_launcher"]
+            versionCode 7
+            versionName "1.0.7"
+        }
+    }
+
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    // compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:cardview-v7:25.3.1'
+    compile 'com.google.code.gson:gson:2.7'
+    //网络请求
+    compile 'com.yanzhenjie.nohttp:nohttp:1.1.5'
+    compile 'com.yanzhenjie.nohttp:okhttp:1.1.5'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.jakewharton:butterknife:8.5.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.0'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile files('libs/ScanerLibrary V1.5.jar')
+    compile files('libs/httpmime-4.3.5.jar')
+    compile files('libs/httpcore-4.3.2.jar')
+    compile files('libs/ht380k4g-jar.jar')
+    compile files('libs/ScanDecode.jar')
+    //compile files('libs/Jb380_Common_V1.3.jar')
+    compile 'com.alibaba:fastjson:1.1.67.android'
+    compile files('libs/core-3.1.1-SNAPSHOT.jar')
+
+}

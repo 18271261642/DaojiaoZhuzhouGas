@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:layout_width="280dp"
+    android:background="@drawable/login_btn_checked"
+    android:layout_height="200dp">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:textSize="@dimen/_20sp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textColor="@color/black"
+        android:text="请读取客户卡或扫描客户编码"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

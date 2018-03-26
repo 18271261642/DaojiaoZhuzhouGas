@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_bottraj"
+        android:icon="@mipmap/icon_bot_trace"
+        android:title="@string/air_trajectory" />
+
+    <item
+        android:id="@+id/navigation_botmsg"
+        android:icon="@mipmap/icon_bot_msg"
+        android:title="@string/air_msg" />
+
+</menu>

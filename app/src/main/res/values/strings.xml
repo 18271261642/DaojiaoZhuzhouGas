@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">燃气</string>
+
+    <string name="wait_dialog_title">加载中...</string>
+    <string name="air_msg">气瓶信息</string>
+    <string name="air_trajectory">气瓶轨迹</string>
+    
+    <string name="user_name">用户名:</string>
+    <string name="user_character">角  色:</string>
+    <string name="daojiao_name">道滘珠洲燃气</string>
+    <string name="hengyuang_gas_name">恒源燃气</string>
+    <string name="huayang_gas_name">东莞市华洋燃气有限公司</string>
+    <string name="cpct_gas_name">常平常态</string>
+    <string name="ztzy_gas_name">中堂中液</string>
+
+
+    <string name="bottleinfo_airbottlecode">气瓶编码：</string>
+    <string name="bottleinfo_bottlesealcode">气瓶钢码：</string>
+    <string name="bottleinfo_bottlespecifications">物料类型：</string>
+    <string name="bottleinfo_createtime">生产日期：</string>
+    <string name="bottleinfo_checktime">检修日期：</string>
+    <string name="bottleinfo_nextchecktime">下次检修日期：</string>
+    <string name="bottleinfo_bottleweight">出厂编号：</string>
+    <string name="bottleinfo_productionunitname">生产单位：</string>
+    <string name="bottleinfo_detectionunitname">检测单位：</string>
+    <string name="bottleinfo_buttonbascinfo">气瓶信息</string>
+    <string name="bottleinfo_buttontrajectory">气瓶轨迹</string>
+
+    <string name="bottle_specifications">气瓶型号</string>
+    <string name="bottle_counts">气瓶数量</string>
+
+    <string name="scan_tips">将扫描框对准二维码远近调节即可自动扫描</string>
+    <string name="open_light">打开手电</string>
+    <string name="close_light">关闭手电</string>
+
+    <string name="net_nogood">网络太菜了...</string>
+    <string name="error_timeout">网络连接超时,请检查网络</string>
+    <string name="error_connetexection">请求超时,请重新请求</string>
+    <string name="error_message">服务器异常,请联系后台管理员</string>
+    <string name="error_sockettimeout">服务器响应超时,请联系后台管理员</string>
+    <string name="error_jsonexection">数据解析异常,请联系后台管理员</string>
+    <string name="error_notfound">404路径不存在,请联系后台管理员</string>
+</resources>

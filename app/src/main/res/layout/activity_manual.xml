@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/comment_title_layout"/>
+
+    <Button
+        android:id="@+id/manualUpdateBtn"
+        android:layout_width="match_parent"
+        android:text="点击按钮检查更新"
+        android:layout_marginTop="@dimen/_25dp"
+        android:background="@drawable/comment_bt_select"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
