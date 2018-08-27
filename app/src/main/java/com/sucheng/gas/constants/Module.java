@@ -38,6 +38,7 @@ public class Module {
     public static final int deliver_heavybot_to_client = 1009;      //送气工配送重瓶给用户
     public static final int deliver_my_noback_orders = 10010;       //送气工我的未回单
     public static final int deliver_recycle_empty_bot_fromclient = 1010;    //送气工从用户回收空瓶
+    public static final int deliver_reback_heavy_bot_fromclient = 10023;    //送气工从用户退回重瓶
 
 
     /**
@@ -54,12 +55,20 @@ public class Module {
     public static final int story_ziti_order_return_order = 10017;  //门店自提订单回单
     public static final int story_ziti_recycler_emptybot = 1017;    //门店自提订单从用户回收空瓶
     public static final int story_niming_ziti = 10018;              //门店匿名自提
+    public static final int story_reback_heavybot_from_client = 10024; //门店从用户退回重瓶
+    public static final int story_reback_heavybot_from_deliver = 10025; //门店从送气工退回重瓶
 
 
+    public static final int wearhouse_check_bot_outhouse = 10042;   //仓库送检出库
+    public static final int wearhouse_check_bot_inhouse = 10043;    //仓库送检入库
+    public static final int story_no_send_order = 10044;            //门店未派送单
 
 
+    public static final int story_in_family_check_photo = 10048;    //门店入库安检拍照
+    public static final int story_in_family_order = 10049;          //门店入户安检订单
 
 
+    public static final int botinfo_initbotcode = 10051;            //初始化二维码
 
 
 

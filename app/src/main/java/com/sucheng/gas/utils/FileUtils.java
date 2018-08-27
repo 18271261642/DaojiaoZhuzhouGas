@@ -16,6 +16,7 @@ public class FileUtils {
 
     /**
      * 删除指定文件夹或里面的内容
+     *
      * @param filePath
      */
     public static void deleteFile(String filePath) {
@@ -51,9 +52,34 @@ public class FileUtils {
         f.delete();
     }
 
+    //删除文件夹下的所有文件
+    public static void deleteAllFiles(File root) {
+        File files[] = root.listFiles();
+        if (files != null)
+            for (File f : files) {
+                if (f.isDirectory()) { // 判断是否为文件夹
+                    deleteAllFiles(f);
+                    try {
+                        f.delete();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    if (f.exists()) { // 判断是否存在
+                        deleteAllFiles(f);
+                        try {
+                            f.delete();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+    }
+
     // 保存文件至SD卡中
     public static File saveFiles(Bitmap bitmap, String filePath2) throws IOException {
-        if(!Utils.isEmpty(filePath2)){
+        if (!Utils.isEmpty(filePath2)) {
             File testFile = new File(filePath2);
             if (testFile.exists()) {
                 testFile.delete();
@@ -65,7 +91,7 @@ public class FileUtils {
                     new FileOutputStream(myCaptureFile));
             // 100表示不进行压缩，70表示压缩率为30%
             bitmap.compress(Bitmap.CompressFormat.JPEG, 70, bos);
-            System.out.println("------filePath2--length==" +myCaptureFile.length() );
+            System.out.println("------filePath2--length==" + myCaptureFile.length());
 
             bos.flush();
             bos.close();

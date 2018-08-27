@@ -31,6 +31,10 @@ public enum UrlCode {
     /**气瓶初始化 检测气瓶是否存在**/
     BOTMSG_INITBOT(Module.init_bot,Constants.BOTMSG_MOBILE+"addAirBottleInfo","检测气瓶是否存在",Constants.BOTMSG_MOBILE+"checkAirBottleCodeExist"),
 
+    /**初始化二维码**/
+    BOTMSG_INITBOTCODE(Module.botinfo_initbotcode,Constants.BOTMSG_MOBILE+"findNonQRCodeAirBottleInfo","初始化二维码",Constants.BOTMSG_MOBILE+"saveNewAirBottleQRCode"),
+
+
     /** 仓库强制空瓶入库 | 检测**/
     WEARHOUSE_FORCE_EMPBOTIN(Module.wearhouse_focusemptybot_inhouse,Constants.WEARHOUSE_MOBILE+"forceEmptyBottleStorage","仓库强制空瓶入库",Constants.WEARHOUSE_MOBILE+"forceEmptyBottleStorageCheck"),
 
@@ -63,6 +67,10 @@ public enum UrlCode {
     WEARHOUSE_ZITI_RECYCLEEMPBOT(Module.wearhouse_recycle_emptybot_from_client,Constants.WEARHOUSE_MOBILE+"emptyBottleStorageFromClient","仓库从用户回收空瓶",Constants.WEARHOUSE_MOBILE+"emptyBottleStorageFromClientCheck"),
 
 
+    //仓库送检出库
+    WEARHOUSE_CHECK_BOT_OUTHOUSE(Module.wearhouse_check_bot_outhouse,Constants.WEARHOUSE_CHECK_BOT_MOBILE+"bottleOutToInspection","仓库送检出库",Constants.WEARHOUSE_CHECK_BOT_MOBILE+"bottleOutToInspectionCheck"),
+    //仓库送检入库
+    WEARHOUSE_CHECK_BOT_INHOUSE(Module.wearhouse_check_bot_inhouse,Constants.WEARHOUSE_CHECK_BOT_MOBILE+"bottleBackFromInspection","仓库送检入库",Constants.WEARHOUSE_CHECK_BOT_MOBILE+"bottleBackFromInspectionCheck"),
 
 
     /**
@@ -78,6 +86,8 @@ public enum UrlCode {
     //从客户回收空瓶
     DELIVER_REBACK_EMPTYBOT_FROMGCLIENT(Module.deliver_recycle_empty_bot_fromclient,Constants.DELIVER_MOBILE+"emptyBottleStorageFromClient","送配工从客户回收空瓶",Constants.DELIVER_MOBILE+"emptyBottleStorageFromClientCheck"),
 
+    /**配送送工从用户退回重瓶**/
+    DELIVER_REBACK_HEAVYBOT_FROM_CLIENT(Module.deliver_reback_heavy_bot_fromclient,Constants.DELIVER_MOBILE+"heavyBottleBackFromClient","送气工从用户退回重瓶",Constants.DELIVER_MOBILE+"heavyBottleBackFromClientCheck"),
 
     /**
      * 门店模块
@@ -110,6 +120,17 @@ public enum UrlCode {
     /**门店匿名自提**/
     STORYANONY_ZITI(Module.story_niming_ziti,Constants.CLIENT_MOBILE+"getAnonymousClientInfo","门店匿名自提",""),
 
+    /**门店从用户退回重瓶 | 检测**/
+    STORY_REBACK_HEAVYBOT_FROM_CLIENT(Module.story_reback_heavybot_from_client,Constants.STORY_MOBILE+"heavyBottleBackFromClient","门店从用户退回重瓶",Constants.STORY_MOBILE+"heavyBottleBackFromClientCheck"),
+    /**门店从送气工退回重瓶 | 检测**/
+    STORY_REBACK_HEAVYBOT_FROM_DELIVER(Module.story_reback_heavybot_from_deliver,Constants.STORY_MOBILE+"heavyBottleBackFromDeliveryMan","门店从送气工退回重瓶",Constants.STORY_MOBILE+"heavyBottleBackFromDeliveryManCheck"),
+    /**门店未派送单**/
+    STORY_NO_SEND_ORDER_LIST(Module.story_no_send_order,Constants.STORY_MOBILE+"getNoDispatchList","门店未派送单",""),
+
+    /**获取门店入户安检订单**/
+    GET_STORY_FAMILY_CHECK_ORDER(Module.story_in_family_order,Constants.STORY_CHECK_ORDER+"getSotreFamilyCheckOrder","门店入户安检",Constants.STORY_CHECK_ORDER+"addMobileFamilyCheckOrder"),
+    /**入户安检拍照**/
+    STORY_FAMILY_CHECK_PHOTO(Module.story_in_family_check_photo,Constants.STORY_CHECK_ORDER+"updateMobileFamilyCheckOrder","入户安检订单拍照",""),
 
     ;
 

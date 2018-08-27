@@ -3,12 +3,14 @@ package com.sucheng.gas.ui.deliver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.sucheng.gas.R;
 import com.sucheng.gas.adapter.TestAdapter;
 import com.sucheng.gas.bean.AddBottleTypeBean;
@@ -18,6 +20,7 @@ import com.sucheng.gas.constants.UrlCode;
 import com.sucheng.gas.interfacepack.OnPromptDialogListener;
 import com.sucheng.gas.scan.CommentScanActivity;
 import com.sucheng.gas.scan.ReadClientCardActivity;
+import com.sucheng.gas.utils.BmapLocalUtils;
 import com.sucheng.gas.utils.Utils;
 import com.sucheng.gas.utils.VoiceUtils;
 import com.sucheng.gas.utils.http.view.RequestPresent;
@@ -29,12 +32,15 @@ import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.rest.RequestQueue;
 import com.yanzhenjie.nohttp.rest.Response;
 import com.zbar.lib.CaptureActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -82,6 +88,14 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
     private String clientId = null;    //客户的id
     int flagCode;
 
+    //定位
+    private BmapLocalUtils bmapLocalUtils;
+    private String latitude = "";   //纬度string
+    private String longitude = "";   //经度string
+
+    private Map<String,Integer> vertMap;
+    int orderTypeId = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +105,26 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
         initViews();
 
         initData();
+
+        initLocals();
+
+
+
+
+    }
+
+    private void initLocals() {
+        bmapLocalUtils = new BmapLocalUtils();
+        bmapLocalUtils.initLocal(DeliverSendBotActivity.this);
+        bmapLocalUtils.setBmapLocalListener(new BmapLocalUtils.BmapLocalListener() {
+            @Override
+            public void getLocalLatLong(double lat, double lon) {
+                Logger.e("---lat=" + lat + "-=" + lon);
+                latitude = lat + "";
+                longitude = lon + "";
+            }
+        });
+        bmapLocalUtils.startLocal();
 
     }
 
@@ -106,9 +140,11 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
         listType = new ArrayList<>();
         totlaList = new ArrayList<>();
 
-        if(Constants.isReadClientCard()){
+        vertMap = new HashMap<>();
+
+        if (Constants.isReadClientCard()) {
             readClientCard();   //读取用户卡
-        }else{
+        } else {
             clientId = getIntent().getStringExtra("clientId") + "";
         }
 
@@ -118,7 +154,7 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
         commentTitleScanImg.setVisibility(View.VISIBLE);
         flagCode = getIntent().getIntExtra("flagCode", 0);
 //        clientId = getIntent().getStringExtra("clientId") + "";
-        switch (flagCode){
+        switch (flagCode) {
             case Module.deliver_my_nosend_orders:   //送气工-我的未派送单-派送重瓶给客户
                 commentTitleTv.setText("配送重瓶给客户");
                 wearhouseNoBotSubBtn.setVisibility(View.GONE);
@@ -143,35 +179,19 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
                 commentTitleTv.setText("送重瓶");
                 wearhouseNoBotSubBtn.setVisibility(View.GONE);
                 break;
-                default:
-                    commentTitleTv.setText(UrlCode.getFlagDes(flagCode));
-                    wearhouseNoBotSubBtn.setVisibility(View.GONE);
-                    break;
+            case Module.deliver_reback_heavy_bot_fromclient: //送气工从用户退回重瓶
+                commentTitleTv.setText("送气工从用户退回重瓶");
+                wearhouseNoBotSubBtn.setVisibility(View.GONE);
+                break;
+            case Module.story_reback_heavybot_from_client:  //门店从用户退回重瓶
+                commentTitleTv.setText("门店从用户退回重瓶");
+                wearhouseNoBotSubBtn.setVisibility(View.GONE);
+                break;
+            default:
+                commentTitleTv.setText(UrlCode.getFlagDes(flagCode));
+                wearhouseNoBotSubBtn.setVisibility(View.GONE);
+                break;
         }
-
-
-//        //显示标题
-//        if (flagCode == UrlCode.DELIVER_MYNOSEND_ORDER.getCode()) {    //送气工送重瓶给客户
-//            commentTitleTv.setText("配送重瓶给客户");
-//            wearhouseNoBotSubBtn.setVisibility(View.GONE);
-//        } else if (flagCode == UrlCode.DELIVER_MYNOREBACK_ORDER.getCode()) {    //送气工从客户回收空瓶
-//            commentTitleTv.setText("从用户回收空瓶");
-//            wearhouseNoBotSubBtn.setVisibility(View.VISIBLE);
-//        } else if (flagCode == UrlCode.STORY_ZITI_BACKORDER.getCode()) {   //门店自提订单回单收空瓶
-//            commentTitleTv.setText("收空瓶");
-//            wearhouseNoBotSubBtn.setVisibility(View.VISIBLE);
-//        } else if(flagCode == UrlCode.STORY_ZITI_ORDER.getCode()){  //门店自提订单送重瓶
-//            commentTitleTv.setText("自提订单送重瓶");
-//            wearhouseNoBotSubBtn.setVisibility(View.VISIBLE);
-//            //readClientCard();   //读取客户卡
-//        }else if(flagCode == UrlCode.WEARHOUSE_ZITI_BAC_ORDER_LIST.getCode()){  //仓库自提从用户回收空瓶
-//            commentTitleTv.setText(UrlCode.getFlagDes(flagCode));
-//            wearhouseNoBotSubBtn.setVisibility(View.VISIBLE);
-//        }
-//        else {
-//            commentTitleTv.setText(UrlCode.getFlagDes(flagCode));
-//            wearhouseNoBotSubBtn.setVisibility(View.GONE);
-//        }
 
     }
 
@@ -194,10 +214,10 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
         }
 
         //摄像头扫描返回
-        if(requestCode == (flagCode+1)){
-            if(resultCode == 0 && data != null){
+        if (requestCode == (flagCode + 1)) {
+            if (resultCode == 0 && data != null) {
                 String scanData = data.getStringExtra("scanResult");
-                if(!Utils.isEmpty(scanData)){
+                if (!Utils.isEmpty(scanData)) {
                     verticalScanBackData(scanData);
                 }
             }
@@ -209,6 +229,8 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
     public void onBottleType(List<AddBottleTypeBean> listBottleType) {
         super.onBottleType(listBottleType);
         for (AddBottleTypeBean addBottleTypeBean : listBottleType) {
+            Logger.e("-----1----="+addBottleTypeBean.toString());
+            vertMap.put(addBottleTypeBean.getAir_bottle_specifications(),addBottleTypeBean.getId());
             mapCount.put(addBottleTypeBean.getId(), 0);
             mapType.put(addBottleTypeBean.getId(), addBottleTypeBean.getAir_bottle_specifications());
             mapTypeCount.put(addBottleTypeBean.getAir_bottle_specifications(), mapCount.get(addBottleTypeBean.getId()));
@@ -216,6 +238,12 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
             mAdapter = new TestAdapter(DeliverSendBotActivity.this, listType, mapTypeCount);
             wearhouseistView.setAdapter(mAdapter);
         }
+
+        String orderType = getIntent().getStringExtra("air_bottle_specifications");
+        Logger.e("-----orderType="+orderType);
+        //对应类型id
+        orderTypeId = vertMap.get(orderType);
+        Logger.e("------ordetypeid="+orderTypeId);
     }
 
     //扫描返回的数据
@@ -232,7 +260,7 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
             Map<String, Object> maps = new HashMap<>();
             maps.put("userId", getUserInfo().getData().getUser_id() + "");
             maps.put("bottleCode", botCode);
-            switch (flagCode){
+            switch (flagCode) {
                 case Module.deliver_my_nosend_orders:   //送气工-我的未派送单-派送重瓶给客户
                     url = UrlCode.DELIVER_SENDHEAVYBOT_TOCLIENT.getCheck();
                     requestPresent.getPresentRequestJSONObject(requestQueue, 1, url, maps, botCode);
@@ -254,75 +282,43 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
                     }
                     break;
                 case Module.story_ziti_ordrs_list:      //门店自提订单送重瓶-送重瓶给用户
-                    if(clientId != null){
+                    if (clientId != null) {
                         url = UrlCode.STORY_ZITI_HBOT_TOCLIENT.getCheck();
-                        maps.put("clientId",clientId);
-                        maps.put("orderId",getIntent().getStringExtra("orderId"));
-                        requestPresent.getPresentRequestJSONObject(requestQueue,1,url,maps,botCode);
+                        maps.put("clientId", clientId);
+                        maps.put("orderId", getIntent().getStringExtra("orderId"));
+                        requestPresent.getPresentRequestJSONObject(requestQueue, 1, url, maps, botCode);
                     }
                     break;
                 case Module.wearhouse_ziti_return_order:    //仓库自提订单回单-从用户回收空瓶
-                    if(clientId != null){
+                    if (clientId != null) {
                         url = UrlCode.WEARHOUSE_ZITI_RECYCLEEMPBOT.getCheck();
-                        maps.put("clientId",clientId);
-                        maps.put("orderId",getIntent().getStringExtra("orderId"));
-                        requestPresent.getPresentRequestJSONObject(requestQueue,1,url,maps,botCode);
+                        maps.put("clientId", clientId);
+                        maps.put("orderId", getIntent().getStringExtra("orderId"));
+                        requestPresent.getPresentRequestJSONObject(requestQueue, 1, url, maps, botCode);
                     }
                     break;
                 case Module.wearhouse_ziti_order_list:      //仓库自提订单--送重瓶
-                    if(clientId != null){
+                    if (clientId != null) {
                         url = UrlCode.WEARHOUSE_HEAVYBOTTO_CLIENT.getCheck();
-                        maps.put("clientId",clientId);
-                        maps.put("orderId",getIntent().getStringExtra("orderId"));
-                        requestPresent.getPresentRequestJSONObject(requestQueue,1,url,maps,botCode);
+                        maps.put("clientId", clientId);
+                        maps.put("orderId", getIntent().getStringExtra("orderId"));
+                        requestPresent.getPresentRequestJSONObject(requestQueue, 1, url, maps, botCode);
                     }
+                    break;
+                case Module.deliver_reback_heavy_bot_fromclient:    //送气工从用户退回重瓶
+                    url = UrlCode.DELIVER_REBACK_HEAVYBOT_FROM_CLIENT.getCheck();
+                    maps.put("orderId", getIntent().getStringExtra("orderId"));
+                    requestPresent.getPresentRequestJSONObject(requestQueue, 1, url, maps, botCode);
+                    break;
+                case Module.story_reback_heavybot_from_client:      //门店从用户退回重瓶
+                    url = UrlCode.STORY_REBACK_HEAVYBOT_FROM_CLIENT.getCheck();
+                    maps.put("orderId", getIntent().getStringExtra("orderId"));
+                    requestPresent.getPresentRequestJSONObject(requestQueue, 1, url, maps, botCode);
                     break;
                 default:
 
                     break;
             }
-
-
-
-//            if (flagCode == UrlCode.DELIVER_MYNOSEND_ORDER.getCode()) {    //送气工送重瓶给客户
-//                url = UrlCode.DELIVER_SENDHEAVYBOT_TOCLIENT.getCheck();
-//                requestPresent.getPresentRequestJSONObject(requestQueue, 1, url, maps, botCode);
-//            } else if (flagCode == UrlCode.DELIVER_MYNOREBACK_ORDER.getCode()) {    //送气工从客户回收空瓶
-//                url = UrlCode.DELIVER_REBACK_EMPTYBOT_FROMGCLIENT.getCheck();
-//                maps.put("clientId", clientId); //客户Id 从订单获取
-//                maps.put("orderId", getIntent().getStringExtra("orderId") + "");
-//                requestPresent.getPresentRequestJSONObject(requestQueue, 1, url, maps, botCode);
-//            } else if (flagCode == UrlCode.STORY_ZITI_BACKORDER.getCode()) { //门店自提订单回空瓶检测
-//                if (clientId != null) {
-//                    url = UrlCode.STORY_ZITI_BACKORDER_EMPTYBOT.getCheck();
-//                    maps.put("clientId", clientId);
-//                    maps.put("orderId", getIntent().getStringExtra("orderId"));
-//                    requestPresent.getPresentRequestJSONObject(requestQueue, 1, url, maps, botCode);
-//                } else {
-//                    VoiceUtils.showToastVoice(this, R.raw.warning, "请按步骤操作!");
-//                }
-//            }else if(flagCode == UrlCode.STORY_ZITI_ORDER.getCode()){   //门店自提订单给用户送重瓶检测
-//                if(clientId != null){
-//                    url = UrlCode.STORY_ZITI_HBOT_TOCLIENT.getCheck();
-//                    maps.put("clientId",clientId);
-//                    maps.put("orderId",getIntent().getStringExtra("orderId"));
-//                    requestPresent.getPresentRequestJSONObject(requestQueue,1,url,maps,botCode);
-//                }
-//            }else if(flagCode == UrlCode.WEARHOUSE_ZITI_BAC_ORDER_LIST.getCode()){  //仓库自提订单回单-检测气瓶
-//                if(clientId != null){
-//                    url = UrlCode.WEARHOUSE_ZITI_RECYCLEEMPBOT.getCheck();
-//                    maps.put("clientId",clientId);
-//                    maps.put("orderId",getIntent().getStringExtra("orderId"));
-//                    requestPresent.getPresentRequestJSONObject(requestQueue,1,url,maps,botCode);
-//                }
-//            }else if(flagCode == UrlCode.WEARHOUSE_ZITI_ORDERLIST.getCode()){   //仓库自提订单送重瓶
-//                if(clientId != null){
-//                    url = UrlCode.WEARHOUSE_HEAVYBOTTO_CLIENT.getCheck();
-//                    maps.put("clientId",clientId);
-//                    maps.put("orderId",getIntent().getStringExtra("orderId"));
-//                    requestPresent.getPresentRequestJSONObject(requestQueue,1,url,maps,botCode);
-//                }
-//            }
         }
     }
 
@@ -378,19 +374,23 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
     //适配
     private void adapterScanCode(int airBottleId, int airBottleTypeId, String botCode) {
         Logger.e("----适配===" + airBottleId + "--=" + airBottleTypeId + "--=" + botCode);
-        if (Utils.isRepeatStrCodes(totlaList, airBottleId + "")) {
-            VoiceUtils.showToastVoice(DeliverSendBotActivity.this, R.raw.warning, "重复气瓶!");
-        } else {
-            if (cond != null) {
-                cond.dismiss();
+        if(orderTypeId != -1 && orderTypeId == airBottleTypeId){
+            if (Utils.isRepeatStrCodes(totlaList, airBottleId + "")) {
+                VoiceUtils.showToastVoice(DeliverSendBotActivity.this, R.raw.warning, "重复气瓶!");
+            } else {
+                if (cond != null) {
+                    cond.dismiss();
+                }
+                VoiceUtils.showVoice(DeliverSendBotActivity.this, R.raw.beep);
+                mapCodeTypeId.put(botCode, 1);
+                totlaList.add(airBottleId + "");
+                mapCount.put(airBottleTypeId, mapCount.get(airBottleTypeId) + 1);
+                mapTypeCount.put(mapType.get(airBottleTypeId), mapCount.get(airBottleTypeId));
+                wearhousetotalcodesTv.setText(totlaList.size() + "瓶");
+                mAdapter.notifyDataSetChanged();
             }
-            VoiceUtils.showVoice(DeliverSendBotActivity.this, R.raw.beep);
-            mapCodeTypeId.put(botCode, 1);
-            totlaList.add(airBottleId + "");
-            mapCount.put(airBottleTypeId, mapCount.get(airBottleTypeId) + 1);
-            mapTypeCount.put(mapType.get(airBottleTypeId), mapCount.get(airBottleTypeId));
-            wearhousetotalcodesTv.setText(totlaList.size() + "瓶");
-            mAdapter.notifyDataSetChanged();
+        }else{
+            VoiceUtils.showToastVoice(DeliverSendBotActivity.this, R.raw.warning, "与订单气瓶类型不匹配!");
         }
     }
 
@@ -420,7 +420,7 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
         });
     }
 
-    @OnClick({R.id.wearhouseSubBtn, R.id.wearhouseNoBotSubBtn,R.id.commentTitleScanImg})
+    @OnClick({R.id.wearhouseSubBtn, R.id.wearhouseNoBotSubBtn, R.id.commentTitleScanImg})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.wearhouseSubBtn:  //提交
@@ -428,8 +428,8 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
                 break;
             case R.id.commentTitleScanImg:  //摄像头扫描
                 Intent intent = new Intent(this, CaptureActivity.class);
-                intent.putExtra("flagCode",(flagCode+1));
-                startActivityForResult(intent,(flagCode+1));
+                intent.putExtra("flagCode", (flagCode + 1));
+                startActivityForResult(intent, (flagCode + 1));
                 break;
             case R.id.wearhouseNoBotSubBtn: //无瓶回单
                 prod = new PromptDialog(this);
@@ -463,11 +463,11 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
             maps.put("orderId", getIntent().getStringExtra("orderId"));
             maps.put("bottleIds", "");
             String url = null;
-            if (flagCode == UrlCode.DELIVER_REBACK_EMPTYBOT_FROMGCLIENT.getCode()) {  //送气工从客户回收空瓶
+            if (flagCode == Module.deliver_my_noback_orders) {  //送气工从客户回收空瓶
                 url = UrlCode.DELIVER_REBACK_EMPTYBOT_FROMGCLIENT.getUrl();
                 maps.put("clientId", clientId);
                 requestPresent.getPresentRequestJSONObject(requestQueue, 2, url, maps, null);
-            }else if(flagCode == UrlCode.STORY_ZITI_BACKORDER.getCode()){   //门店自提订单回单
+            } else if (flagCode == Module.story_ziti_order_return_order) {   //门店自提订单回单
                 if (!Utils.isEmpty(clientId)) {
                     url = UrlCode.STORY_ZITI_BACKORDER_EMPTYBOT.getUrl();
                     maps.put("clientId", clientId);
@@ -475,7 +475,7 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
                 } else {
                     VoiceUtils.showToastVoice(DeliverSendBotActivity.this, R.raw.warning, "请按步骤操作!");
                 }
-            }else if(flagCode ==  UrlCode.WEARHOUSE_ZITI_BAC_ORDER_LIST.getCode()){     //仓库自提订单回单
+            } else if (flagCode == Module.wearhouse_ziti_return_order) {     //仓库自提订单回单
                 if (!Utils.isEmpty(clientId)) {
                     url = UrlCode.WEARHOUSE_ZITI_RECYCLEEMPBOT.getUrl();
                     maps.put("clientId", clientId);
@@ -483,12 +483,12 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
                 } else {
                     VoiceUtils.showToastVoice(DeliverSendBotActivity.this, R.raw.warning, "请按步骤操作!");
                 }
-            }else if(flagCode == UrlCode.WEARHOUSE_ZITI_ORDERLIST.getCode()){   //仓库自提订单送重瓶-提交
-                if(clientId != null){
+            } else if (flagCode == Module.wearhouse_ziti_order_list) {   //仓库自提订单送重瓶-提交
+                if (clientId != null) {
                     url = UrlCode.WEARHOUSE_HEAVYBOTTO_CLIENT.getCheck();
-                    maps.put("clientId",clientId);
-                    maps.put("orderId",getIntent().getStringExtra("orderId"));
-                    requestPresent.getPresentRequestJSONObject(requestQueue,1,url,maps,null);
+                    maps.put("clientId", clientId);
+                    maps.put("orderId", getIntent().getStringExtra("orderId"));
+                    requestPresent.getPresentRequestJSONObject(requestQueue, 1, url, maps, null);
                 }
             }
         }
@@ -503,15 +503,17 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
             maps.put("orderId", getIntent().getStringExtra("orderId"));
             maps.put("bottleIds", Utils.ListToStr(totlaList));
             String url = null;
-            if (flagCode == UrlCode.DELIVER_REBACK_EMPTYBOT_FROMGCLIENT.getCode()) {  //送气工从客户回收空瓶
+            if (flagCode == Module.deliver_my_noback_orders) {  //送气工从客户回收空瓶
                 url = UrlCode.DELIVER_REBACK_EMPTYBOT_FROMGCLIENT.getUrl();
                 maps.put("clientId", clientId);
                 requestPresent.getPresentRequestJSONObject(requestQueue, 2, url, maps, null);
-            } else if (flagCode == UrlCode.DELIVER_SENDHEAVYBOT_TOCLIENT.getCode()) { //送气工送重瓶给客户
+            } else if (flagCode == Module.deliver_my_nosend_orders) { //送气工送重瓶给客户
                 url = UrlCode.DELIVER_SENDHEAVYBOT_TOCLIENT.getUrl();
                 maps.put("clientId", clientId);
+                maps.put("latitude", latitude);
+                maps.put("longitude", longitude);
                 requestPresent.getPresentRequestJSONObject(requestQueue, 2, url, maps, null);
-            } else if (flagCode == UrlCode.STORY_ZITI_BACKORDER.getCode()) {  //门店自定订单回空瓶提交
+            } else if (flagCode == Module.story_ziti_order_return_order) {  //门店自定订单回空瓶提交
                 if (!Utils.isEmpty(clientId)) {
                     url = UrlCode.STORY_ZITI_BACKORDER_EMPTYBOT.getUrl();
                     maps.put("clientId", clientId);
@@ -520,7 +522,7 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
                     VoiceUtils.showToastVoice(DeliverSendBotActivity.this, R.raw.warning, "客户ID为空!");
                 }
 
-            }else if(flagCode == UrlCode.STORY_ZITI_ORDER.getCode()){   //门店自提订单--重瓶出库给用户
+            } else if (flagCode == Module.story_ziti_ordrs_list) {   //门店自提订单--重瓶出库给用户
                 if (!Utils.isEmpty(clientId)) {
                     url = UrlCode.STORY_ZITI_HBOT_TOCLIENT.getUrl();
                     maps.put("clientId", clientId);
@@ -528,7 +530,7 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
                 } else {
                     VoiceUtils.showToastVoice(DeliverSendBotActivity.this, R.raw.warning, "客户ID为空!");
                 }
-            }else if(flagCode == UrlCode.WEARHOUSE_ZITI_ORDERLIST.getCode()){   //仓库自提订单-提交操作
+            } else if (flagCode == Module.wearhouse_ziti_order_list) {   //仓库自提订单-提交操作
                 if (!Utils.isEmpty(clientId)) {
                     url = UrlCode.WEARHOUSE_HEAVYBOTTO_CLIENT.getUrl();
                     maps.put("clientId", clientId);
@@ -536,8 +538,7 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
                 } else {
                     VoiceUtils.showToastVoice(DeliverSendBotActivity.this, R.raw.warning, "客户ID为空!");
                 }
-            }
-            else if(flagCode == UrlCode.WEARHOUSE_ZITI_BAC_ORDER_LIST.getCode()){  //仓库自提订单回单--提交操作
+            } else if (flagCode == Module.wearhouse_ziti_return_order) {  //仓库自提订单回单--提交操作
                 if (!Utils.isEmpty(clientId)) {
                     url = UrlCode.WEARHOUSE_ZITI_RECYCLEEMPBOT.getUrl();
                     maps.put("clientId", clientId);
@@ -545,7 +546,14 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
                 } else {
                     VoiceUtils.showToastVoice(DeliverSendBotActivity.this, R.raw.warning, "客户ID为空!");
                 }
+            } else if (flagCode == Module.deliver_reback_heavy_bot_fromclient) {       //送气工从用户退回重瓶
+                url = UrlCode.DELIVER_REBACK_HEAVYBOT_FROM_CLIENT.getUrl();
+                requestPresent.getPresentRequestJSONObject(requestQueue, 2, url, maps, null);
+            }else if(flagCode == Module.story_reback_heavybot_from_client){     //门店从用户退回重瓶
+                url = UrlCode.STORY_REBACK_HEAVYBOT_FROM_CLIENT.getUrl();
+                requestPresent.getPresentRequestJSONObject(requestQueue, 2, url, maps, null);
             }
+
             else {
                 VoiceUtils.showToastVoice(this, R.raw.warning, "待完成");
             }
@@ -558,12 +566,28 @@ public class DeliverSendBotActivity extends CommentScanActivity implements Reque
     private DialogInterface.OnKeyListener onKeyListener = new DialogInterface.OnKeyListener() {
         @Override
         public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-            if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
-                if(cond != null){
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (cond != null) {
                     cond.dismiss();
                 }
             }
             return true;
         }
     };
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (bmapLocalUtils != null) {
+            bmapLocalUtils.stopLocal();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (bmapLocalUtils != null) {
+            bmapLocalUtils.destoryLocal();
+        }
+    }
 }

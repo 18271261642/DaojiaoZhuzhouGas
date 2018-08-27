@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/comment_title_layout"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_height="0dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="@dimen/_5dp"
+                android:text="第一步:"
+                android:textSize="@dimen/_20sp"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/verticalClientTv"
+                android:layout_width="@dimen/_0dp"
+                android:layout_weight="2"
+                android:textSize="@dimen/_25sp"
+                android:text="验证用户"
+                android:padding="@dimen/_5dp"
+                android:textColor="@color/black"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/_15dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="@dimen/_5dp"
+                android:text="第二步:"
+                android:textSize="@dimen/_20sp"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/takePtoTv"
+                android:layout_width="@dimen/_0dp"
+                android:layout_weight="2"
+                android:textSize="@dimen/_25sp"
+                android:text="点击拍照"
+                android:padding="@dimen/_5dp"
+                android:textColor="@color/black"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/addSubBtn"
+        android:layout_width="match_parent"
+        android:text="提交"
+        android:background="@drawable/comment_bt_select"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

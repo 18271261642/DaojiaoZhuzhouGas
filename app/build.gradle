@@ -10,6 +10,7 @@ android {
         versionCode 7
         versionName "1.0.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        //manifestPlaceholders = [VALUE: "c90e2f92657fb20a7f825699d900e59a"]//添加一个默认渠道号
     }
 
     signingConfigs {
@@ -19,6 +20,13 @@ android {
             keyAlias RELEASE_ALAIS
             keyPassword RELEASE_ALAIS_PWD  //签名密码
         }
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('C:/Users/Administrator/.android/debug.keystore')
+            storePassword 'android'
+        }
+
     }
 
     packagingOptions {
@@ -32,6 +40,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug{
+            signingConfig signingConfigs.debug
         }
     }
 
@@ -40,37 +52,98 @@ android {
             buildConfigField "int", "ENV_TYPE", "1"
             applicationId "com.sucheng.gas"
             manifestPlaceholders = [app_name: "道滘株洲燃气", app_icon: "@drawable/ic_launcher"]
-            versionCode 7
-            versionName "1.0.7"
+            //manifestPlaceholders = [VALUE :"ohHsAoshVSfAeIklTdPjopKcYLROxO1h"]
+            versionCode 13
+            versionName "1.1.3 ->18/07/06"
+
         }
         hengyuangas {
             buildConfigField "int", "ENV_TYPE", "2"
             applicationId "com.sucheng.hengyuangas"
             manifestPlaceholders = [app_name: "恒源燃气", app_icon: "@drawable/ic_launcher"]
-            versionCode 7
-            versionName "1.0.7"
+            //manifestPlaceholders = [VALUE :"Hpld4enDIsNRQA0ETXP451MVkG8cgCRV	"]
+            versionCode 10
+            versionName "1.1.0->18/07/20"
         }
         huayanggas{
             buildConfigField "int","ENV_TYPE","3"
             applicationId "com.sucheng.huayanggas"
             manifestPlaceholders = [app_name: "华洋燃气",app_icon: "@drawable/icon_huayanggas"]
+            //manifestPlaceholders = [VALUE :"c51da8d25149aa12939b6b2c1b7fac0a"]
             versionCode 7
             versionName "1.0.7"
         }
         changpingchangtaigas{
             buildConfigField "int","ENV_TYPE","4"
             applicationId "com.sucheng.cpctgas"
-            manifestPlaceholders = [app_name: "华洋燃气",app_icon: "@drawable/ic_launcher"]
-            versionCode 7
-            versionName "1.0.7"
+            manifestPlaceholders = [app_name: "常平常泰",app_icon: "@drawable/ic_launcher"]
+            //manifestPlaceholders = [VALUE :"Ve79xDpdCWphRrGOqxGHWhXBq3b2yNPn"]
+            versionCode 9
+            versionName "1.0.98->18/07/18"
         }
 
         ztzygas{
             buildConfigField "int","ENV_TYPE","5"
             applicationId "com.sucheng.ztzygas"
             manifestPlaceholders = [app_name: "中堂中液",app_icon: "@drawable/ic_launcher"]
+           // manifestPlaceholders = [VALUE :"19YAAANZSQNl8tbFvcAYVzVy7Tfl3e32"]
+            versionCode 10
+            versionName "1.1.0->18/07/13"
+        }
+        houjiehlgas{
+            buildConfigField "int","ENV_TYPE","6"
+            applicationId "com.sucheng.houjiehlgas"
+            manifestPlaceholders = [app_name: "厚街厚龙",app_icon: "@drawable/ic_launcher"]
+           // manifestPlaceholders = [VALUE :"yQ71ExOCPMHQ1W9r0RXt8yxGGUMFC1GS"]
+            versionCode 8
+            versionName "1.0.8"
+        }
+        hjbaoshangas{
+            buildConfigField "int","ENV_TYPE","7"
+            applicationId "com.sucheng.hjbaoshangas"
+            manifestPlaceholders = [app_name: "黄江宝山燃气",app_icon: "@drawable/ic_launcher"]
+            //manifestPlaceholders = [VALUE :"NK9ew4dOMV0xPfoTZ30Yh46pCZrBKf0f"]
+            versionCode 8
+            versionName "1.0.8"
+        }
+        //樟木头新世纪
+        zmtxsjgas{
+            buildConfigField "int","ENV_TYPE","8"
+            applicationId "com.sucheng.zmtxsjgas"
+            manifestPlaceholders = [app_name: "樟木头新世纪",app_icon: "@drawable/ic_launcher"]
+            //manifestPlaceholders = [VALUE :"TKGI51SM9FGwscPT4gzF2U9DUUoiR9ib"]
             versionCode 7
-            versionName "1.0.7"
+            versionName "1.0.7->18/05/10"
+        }
+
+        //横沥大山
+        hldsgas{
+            buildConfigField "int","ENV_TYPE","9"
+            applicationId "com.sucheng.hldsgas"
+            manifestPlaceholders = [app_name: "横沥大山",app_icon: "@drawable/ic_launcher"]
+            //manifestPlaceholders = [VALUE :"lBAH7dlbgdpDCMLx08KqSi8BD9bhgHaM"]
+            versionCode 3
+            versionName "1.0.3->18/08/06"
+        }
+
+        //黄江长隆
+        hjclgas{
+            buildConfigField "int","ENV_TYPE","10"
+            applicationId "com.sucheng.hjclgas"
+            manifestPlaceholders = [app_name: "黄江长隆",app_icon: "@drawable/ic_launcher"]
+            //manifestPlaceholders = [VALUE :"Wt1prvj41EM2asmRKzXct2CHaM3T7Pth"]
+            versionCode 1
+            versionName "1.0->18/06/11"
+        }
+
+        //梅州大丰气体
+        meizhoudfgas{
+            buildConfigField "int","ENV_TYPE","11"
+            applicationId "com.sucheng.meizhoudf"
+            manifestPlaceholders = [app_name: "梅州市大丰气体",app_icon: "@drawable/ic_launcher"]
+            //manifestPlaceholders = [VALUE :"W9XCT1j7NvoE69U7DU1H2zwFSx7K9Rrl"]
+            versionCode 1
+            versionName "1.0->18/08/21"
         }
     }
 
@@ -101,5 +174,7 @@ dependencies {
     //compile files('libs/Jb380_Common_V1.3.jar')
     compile 'com.alibaba:fastjson:1.1.67.android'
     compile files('libs/core-3.1.1-SNAPSHOT.jar')
-
+    //高德地图定位
+    //compile 'com.amap.api:location:latest.integration'
+    compile files('libs/BaiduLBS_Android.jar')
 }

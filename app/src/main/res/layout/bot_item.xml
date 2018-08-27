@@ -20,6 +20,23 @@
         android:layout_height="1dp"
         android:background="#EBEBEB"/>
 
+
+    <TextView
+        android:id="@+id/item4"
+        android:layout_width="match_parent"
+        android:text="演示服务器"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:background="@drawable/login_btn_selector"
+        android:padding="10dp"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#EBEBEB"/>
+
     <TextView
         android:id="@+id/item2"
         android:layout_width="match_parent"

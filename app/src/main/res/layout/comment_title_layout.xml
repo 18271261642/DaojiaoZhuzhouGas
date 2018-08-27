@@ -1,37 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/theme_color"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent">
+    android:orientation="vertical"
+    android:background="@color/theme_color">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
 
     <ImageView
         android:id="@+id/commentTitleBackImg"
-        android:visibility="invisible"
         android:layout_width="@dimen/_32dp"
+        android:layout_height="@dimen/_32dp"
         android:layout_centerVertical="true"
         android:background="@mipmap/icon_back_img"
-        android:layout_height="@dimen/_32dp" />
+        android:visibility="invisible" />
 
-<TextView
-    android:layout_height="wrap_content"
-    android:text=""
-    android:layout_width="wrap_content"
-    android:gravity="center"
-    android:textSize="20sp"
-    android:layout_centerInParent="true"
-    android:padding="8dp"
-    android:id="@+id/commentTitleTv"
-    android:textColor="@color/white"/>
+    <TextView
+        android:id="@+id/commentTitleTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
     <ImageView
         android:id="@+id/commentTitleScanImg"
         android:layout_width="@dimen/_32dp"
-        android:layout_centerVertical="true"
-        android:visibility="invisible"
-        android:background="@mipmap/icon_zxing_scan"
+        android:layout_height="@dimen/_32dp"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/_15dp"
-        android:layout_height="@dimen/_32dp" />
+        android:background="@mipmap/icon_zxing_scan"
+        android:visibility="invisible" />
+    </RelativeLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="技术支持:东莞市速成信息科技有限公司"
+        android:layout_height="wrap_content" />
 
-</RelativeLayout>
+</LinearLayout>

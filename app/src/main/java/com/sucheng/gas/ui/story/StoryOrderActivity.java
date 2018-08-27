@@ -311,7 +311,7 @@ public class StoryOrderActivity extends CommentScanActivity implements RequestVi
                     Map<String, Object> maps = new HashMap<>();
                     String url = null;
                     if(flagCode == Module.story_niming_ziti){   //门店匿名自提
-                        url = UrlCode.WEARHOUSE_HEAVYBOTTO_CLIENT.getUrl();
+                        url = UrlCode.STORY_ZITI_PLACEORDER.getUrl();
                     }else{
                         url = UrlCode.getFlagUrl(flagCode);
                     }

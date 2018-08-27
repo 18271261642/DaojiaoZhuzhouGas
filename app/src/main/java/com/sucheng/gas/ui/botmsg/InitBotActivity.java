@@ -1,11 +1,15 @@
 package com.sucheng.gas.ui.botmsg;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
@@ -153,9 +157,21 @@ public class InitBotActivity extends CommentScanActivity implements RequestView<
     //日期选择弹窗
     private TimeDialogView timeDialogView;
 
+    @SuppressLint("HandlerLeak")
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            //删除拍摄的图片
+            FileUtils.deleteAllFiles(new File(Environment.getExternalStorageDirectory().getPath()
+                    + "/MyPhoto/"));
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Logger.e("---------onCreate---");
         setContentView(R.layout.activity_init);
         ButterKnife.bind(this);
 
@@ -200,6 +216,8 @@ public class InitBotActivity extends CommentScanActivity implements RequestView<
         initbottleHardCode.setText(Constants.initHeavyBotCode());
         clearFocus();
 
+        handler.sendEmptyMessage(0x01);
+
     }
 
     //清除焦点
@@ -215,6 +233,20 @@ public class InitBotActivity extends CommentScanActivity implements RequestView<
         initbottlecycleTv.clearFocus();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 
     @Override
     protected void onDestroy() {
@@ -403,16 +435,21 @@ public class InitBotActivity extends CommentScanActivity implements RequestView<
                 String bottleOutDate = initbottleOutEdit.getText().toString().trim();   //出厂日期
                 String bottleServiceDate = initbottleServiceEdit.getText().toString().trim();   //检测日期
                 String bottleNextServiceDate = initbottleNextServiceEdit.getText().toString().trim();   //下次检测日期
-                if (!Utils.isEmpty(bottleHardCode) && !Utils.isEmpty(bottleUsrTime) && Utils.isNumeric(bottleUsrTime) && !Utils.isEmpty(bottleOutDate)
+                if (!Utils.isEmpty(bottleHardCode) && !Utils.isEmpty(bottleFactory) && !Utils.isEmpty(bottleUsrTime) && Utils.isNumeric(bottleUsrTime) && !Utils.isEmpty(bottleOutDate)
                         && !Utils.isEmpty(bottleServiceDate) && !Utils.isEmpty(bottleNextServiceDate)) {
                     Logger.e("------参数==" + bottleHardCode + "-=" + bottleFactory + "-=" + bottleUsrTime + "-=" + bottleOutDate + "-=" + bottleServiceDate + "-=" + bottleNextServiceDate);
                     Logger.e("----时间转换=" + Utils.StringToDate(bottleOutDate).getTime() + "---=" + Utils.StringToDate(bottleServiceDate).getTime() + "-=" + Utils.StringToDate(bottleNextServiceDate).getTime());
 
-                    if (photoFileList.size() > 0) {
+                    if(Constants.initIsTakePick()){     //必须拍照
+                        if (photoFileList.size() > 0) {
+                            uploadInitBotData(bottleHardCode, bottleFactory, bottleUsrTime, bottleOutDate, bottleServiceDate, bottleNextServiceDate);    //提交数据
+                        } else {
+                            VoiceUtils.showToastVoice(InitBotActivity.this, R.raw.warning, "请按步骤操作!");
+                        }
+                    }else{      //不必必须拍照
                         uploadInitBotData(bottleHardCode, bottleFactory, bottleUsrTime, bottleOutDate, bottleServiceDate, bottleNextServiceDate);    //提交数据
-                    } else {
-                        VoiceUtils.showToastVoice(InitBotActivity.this, R.raw.warning, "请按步骤操作!");
                     }
+
                 } else {
                     VoiceUtils.showToastVoice(InitBotActivity.this, R.raw.warning, "请按步骤操作!");
                 }
@@ -503,27 +540,32 @@ public class InitBotActivity extends CommentScanActivity implements RequestView<
             } else {
                 startActivityForResult(intent, TAKE_PHOTO_CODE2);
             }
-
+        }else{
+            VoiceUtils.showToastVoice(InitBotActivity.this,R.raw.warning,"当前SD卡不可用!");
         }
     }
 
     // 图片保存
     private Uri pathUri(String fileName) {
         String strPhotoName = fileName + ".jpg";
-        String savePath = Environment.getExternalStorageDirectory().getPath()
+        String savePath = Environment.getExternalStorageDirectory().getAbsolutePath()
                 + "/MyPhoto/";
+        String fpath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath()+"/";
+        Logger.e("----图片保存路径="+savePath+"--="+fpath);
         File dir = new File(savePath);
         if (!dir.exists()) {
             dir.mkdirs();
         }
         filePath = savePath + strPhotoName;
+        Logger.e("-----filePath="+filePath);
         return Uri.fromFile(new File(dir, strPhotoName));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == TAKE_PHOTO_CODE1) {    //二维码部分返回
+        Logger.e("---------onActivityResult---");
+        if (requestCode == TAKE_PHOTO_CODE1) {
             if (resultCode == RESULT_OK) {
                 Bitmap bitmap = FileUtils.compressBySize(filePath, 480, 800);
                 try {
@@ -599,17 +641,20 @@ public class InitBotActivity extends CommentScanActivity implements RequestView<
         timeDialogView.show();
         timeDialogView.setTitle("选择日期");
         timeDialogView.setOnTimeDialogListener(new TimeDialogView.OnTimeDialogClickListener() {
+
             @Override
-            public void getYesDialogTime(String timedata) {
+            public void getYesDialogTime(int year, int month, int daty) {
+                Logger.e("-------选择日期="+year+"-m="+month+"-d="+daty);
                 switch (code) {
                     case 0:
-                        initbottleOutEdit.setText(timedata);
+                        initbottleOutEdit.setText(year+"-"+month+"-"+daty);
                         break;
                     case 1:
-                        initbottleServiceEdit.setText(timedata);
+                        initbottleServiceEdit.setText(year+"-"+month+"-"+daty);
+                        initbottleNextServiceEdit.setText(timeDialogView.get4DateTime());
                         break;
                     case 2:
-                        initbottleNextServiceEdit.setText(timedata);
+                        initbottleNextServiceEdit.setText(year+"-"+month+"-"+daty);
                         break;
                     default:
                         break;

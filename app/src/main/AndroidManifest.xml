@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sucheng.gas" >
+    xmlns:app="http://schemas.android.com/tools"
+    package="com.sucheng.gas"
+    app:ignore="NamespaceTypo">
 
     <application
         android:name=".base.MyApplication"
         android:allowBackup="true"
-        android:icon="${app_icon}"
+        android:icon="@mipmap/ic_launcher"
         android:label="${app_name}"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
+
+        <!--&lt;!&ndash;高德地图&ndash;&gt;
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="39083a539595183dcedb78857ec43ea1"/>-->
+        <!--百度地图-->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="W9XCT1j7NvoE69U7DU1H2zwFSx7K9Rrl" />
+
         <activity android:name=".ui.login.LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,6 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <!--主页面-->
         <activity android:name=".ui.HomeActivity"
             android:screenOrientation="portrait"
@@ -41,11 +54,22 @@
         <activity android:name=".ui.wearhouse.WearhouseOutActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
+
+        <!--添加门店入户安检订单-->
+        <activity android:name=".ui.story.AddStoryFamilyCheckOrderActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <!--获取门店入户安检订单-->
+        <activity android:name=".ui.story.StoryFamilyCheckOrderActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+
         <!--读取员工卡-->
         <activity android:name=".scan.ReadEmplayeeCard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme.ActivityDialogStyle"/>
+
         <!--读取客户卡-->
         <activity android:name=".scan.ReadClientCardActivity"
             android:screenOrientation="portrait"
@@ -75,13 +99,47 @@
         <activity android:name=".ui.client.RegisterClientmsgActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
+        <!--送气工从用户退重瓶-->
+        <activity android:name=".ui.deliver.DeliverRebackHBotFromClientActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <!--仓库送检出库-入库-->
+        <activity android:name=".ui.wearhouse.WearhouseCheckBotActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <!--初始化二维码-->
+        <activity android:name=".ui.botmsg.InitBotCodeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+
         <!--下载apk的service-->
         <service android:name=".utils.DownloadService"/>
+        <!-- 百度地图 声明service组件 -->
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" >
+        </service>
     </application>
     <uses-feature android:name="android.hardware.nfc" android:required="true" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- 用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- 用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!-- 用于提高GPS定位速度 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <uses-permission android:name="android.permission.NFC"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.CAMERA"/>

@@ -106,7 +106,7 @@ public class ReadClientCardActivity extends CommentScanActivity implements Reque
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        String cardCode = ReadCardUtils.readCardBySector8(ReadClientCardActivity.this,
+        String cardCode = ReadCardUtils.readCardBySector7(ReadClientCardActivity.this,
                 intent);
         if (!Utils.isEmpty(cardCode.trim()) && !cardCode.trim().equals("readCustomerError")) {
             Logger.e("----读卡=="+cardCode.trim());

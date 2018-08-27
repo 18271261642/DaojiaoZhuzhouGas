@@ -14,8 +14,10 @@ import com.sucheng.gas.R;
 
 public class ReadCardUtils {
 
-    private static final String sector7pwd = "2956802978ff"; // 第7扇区密码
-    private static final String sector8pwd = "0587317295ff";// 第8扇区密码
+    //private static final String sector7pwd = "2956802978ff"; // 第7扇区密码
+    private static final String sector7pwd = "1229179627ff";    //第7扇区密码
+    //private static final String sector8pwd = "0587317295ff";// 第8扇区密码 0587317295ff
+    private static final String sector8pwd = "0587317295ff";
 
     /**
      * 读卡返回值解析

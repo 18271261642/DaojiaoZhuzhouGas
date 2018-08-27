@@ -63,7 +63,16 @@ public class AddBottleTypeBean {
 		this.id = id;
 		this.air_bottle_specifications = air_bottle_specifications;
 	}
-	
-	
 
+
+	@Override
+	public String toString() {
+		return "AddBottleTypeBean{" +
+				"id=" + id +
+				", airBottleId=" + airBottleId +
+				", airBottleTypeId=" + airBottleTypeId +
+				", air_bottle_specifications='" + air_bottle_specifications + '\'' +
+				", default_weight=" + default_weight +
+				'}';
+	}
 }

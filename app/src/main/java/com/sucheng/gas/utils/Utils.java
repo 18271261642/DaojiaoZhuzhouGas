@@ -2,10 +2,14 @@ package com.sucheng.gas.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sucheng.gas.BuildConfig;
 import com.sucheng.gas.base.CommentDataBean;
+import com.sucheng.gas.base.EnvType;
 import com.sucheng.gas.bean.AddBottleTypeBean;
 import com.sucheng.gas.bean.UserBean;
 import org.json.JSONException;
@@ -17,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -257,5 +262,38 @@ public class Utils {
         return false;
     }
 
+    public static void initAppMeta(Context context) {
+        String meta = "com.amap.api.v2.apikey";
+
+        ApplicationInfo applicationInfo = null;
+
+            try {
+                applicationInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        int envType = BuildConfig.ENV_TYPE;
+        switch (envType) {
+            case EnvType.DAOJIAO_GAS:
+                applicationInfo.metaData.putString(meta,"c90e2f92657fb20a7f825699d900e59a");//道滘SJH
+                break;
+            case EnvType.HENGYUAN_GAS:
+                applicationInfo.metaData.putString(meta,"9a67cee7924b7a537cfbce6d704f8fce");//恒源
+                break;
+            case EnvType.HUAYANG_GAS:   //华洋燃气
+                applicationInfo.metaData.putString(meta,"c51da8d25149aa12939b6b2c1b7fac0a");
+                break;
+            case EnvType.CPCT_GAS:  //常平常泰
+                applicationInfo.metaData.putString(meta,"2879997a17957047aef88d0d539d285e");
+                break;
+            case EnvType.ZTZY_GAS:      //中堂中液
+                applicationInfo.metaData.putString(meta,"cdd6f31d2c9be21faaf1ea073d5079f5");
+                break;
+            case EnvType.HOUJIE_HL_GAS: //厚街厚龙
+                applicationInfo.metaData.putString(meta,"fc48087bc58f27907771d45884a55854");
+                break;
+        }
+
+    }
 
 }

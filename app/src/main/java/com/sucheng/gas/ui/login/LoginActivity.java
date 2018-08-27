@@ -4,6 +4,7 @@ import android.content.Context;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.TextInputEditText;
@@ -23,6 +24,8 @@ import com.sucheng.gas.constants.UrlCode;
 import com.sucheng.gas.scan.CommentScanActivity;
 import com.sucheng.gas.ui.HomeActivity;
 import com.sucheng.gas.utils.AppUtils;
+import com.sucheng.gas.utils.FileUtils;
+import com.sucheng.gas.utils.SHA1Utils;
 import com.sucheng.gas.utils.SharedPreferenceUtils;
 import com.sucheng.gas.utils.UpdateChecker;
 import com.sucheng.gas.utils.Utils;
@@ -88,6 +91,8 @@ public class LoginActivity extends CommentScanActivity implements RequestView<JS
         if (!hasNfc(this)) {
             VoiceUtils.showToastVoice(this, R.raw.warning, "当前设备不支持NFC功能!");
         }
+        Logger.e("-----packname="+getPackageName());
+        Logger.e("----SHA1="+ SHA1Utils.sHA1(this));
 
     }
 
@@ -114,6 +119,15 @@ public class LoginActivity extends CommentScanActivity implements RequestView<JS
             loginAccountEdit.setText(name);
             loginPwdEdit.setText(pwd);
         }
+
+//        //删除拍摄的图片
+//        Logger.e("------图片地址="+Environment.getExternalStorageDirectory().getAbsoluteFile().getPath()
+//                + "/MyPhoto");
+//        FileUtils.deleteFile(Environment.getExternalStorageDirectory().getPath()
+//                + "/MyPhoto");
+//
+//        FileUtils.deleteFile(Environment.getExternalStorageDirectory().getPath()
+//                + "/MyPhoto/"+"1522310446602.jpg");
 
     }
 
@@ -167,9 +181,11 @@ public class LoginActivity extends CommentScanActivity implements RequestView<JS
                 TextView tv1 = (TextView) serView.findViewById(R.id.item1);
                 TextView tv2 = (TextView) serView.findViewById(R.id.item2);
                 TextView tv3 = (TextView) serView.findViewById(R.id.item3);
+                TextView tv4 = (TextView) serView.findViewById(R.id.item4);
                 tv1.setOnClickListener(new itemClick());
                 tv2.setOnClickListener(new itemClick());
                 tv3.setOnClickListener(new itemClick());
+                tv4.setOnClickListener(new itemClick());
                 bottomSheetDialog = new BottomSheetDialog(LoginActivity.this);
                 bottomSheetDialog.setContentView(serView);
                 bottomSheetDialog.show();
@@ -231,6 +247,10 @@ public class LoginActivity extends CommentScanActivity implements RequestView<JS
                     bottomSheetDialog.dismiss();
                     break;
                 case R.id.item3:
+                    bottomSheetDialog.dismiss();
+                    break;
+                case R.id.item4:    //演示服务器
+                    MyApplication.code(2);
                     bottomSheetDialog.dismiss();
                     break;
             }

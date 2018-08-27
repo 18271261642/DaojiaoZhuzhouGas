@@ -8,9 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-
-
 import com.sucheng.gas.R;
+import java.util.Calendar;
 
 /**
  * Created by Administrator on 2018/1/24.
@@ -21,8 +20,11 @@ import com.sucheng.gas.R;
  */
 public class TimeDialogView extends Dialog implements View.OnClickListener{
 
+    private static final String TAG = "TimeDialogView";
     private DatePicker datePicker;
     private Button yesbtn,canclebtn;
+    private Calendar calendar;
+
 
     private OnTimeDialogClickListener onTimeDialogListener;
 
@@ -32,6 +34,7 @@ public class TimeDialogView extends Dialog implements View.OnClickListener{
 
     public TimeDialogView(@NonNull Context context) {
         super(context);
+
     }
 
     @Override
@@ -46,9 +49,9 @@ public class TimeDialogView extends Dialog implements View.OnClickListener{
     }
 
     private void initData() {
+        calendar = Calendar.getInstance();
         //判断系统版本
         int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-
     }
 
     private void initViews() {
@@ -58,6 +61,12 @@ public class TimeDialogView extends Dialog implements View.OnClickListener{
         yesbtn.setOnClickListener(this);
         canclebtn.setOnClickListener(this);
 
+    }
+
+    //设置+4年日期
+    public String get4DateTime(){
+       // int month = datePicker.getMonth()+5;
+        return (datePicker.getYear()+4)+"-"+(datePicker.getMonth()+1)+"-"+datePicker.getDayOfMonth();
     }
 
     @Override
@@ -70,17 +79,18 @@ public class TimeDialogView extends Dialog implements View.OnClickListener{
                 }
                 break;
             case R.id.timeDialogSureBtn:    //确定
+                datePicker.clearFocus();
                 if(onTimeDialogListener != null){
                     String timeData = datePicker.getYear()+"-" + (datePicker.getMonth() +1)+ "-" + datePicker.getDayOfMonth();
                     Log.e("日期选择","---timedata="+timeData);
-                    onTimeDialogListener.getYesDialogTime(timeData);
+                    onTimeDialogListener.getYesDialogTime( datePicker.getYear(),(datePicker.getMonth() +1),datePicker.getDayOfMonth());
                 }
                 break;
         }
     }
 
     public interface OnTimeDialogClickListener{
-        void getYesDialogTime(String timedata);
+        void getYesDialogTime(int year,int month,int daty);
         void getCancleDialogTime();
     }
 }

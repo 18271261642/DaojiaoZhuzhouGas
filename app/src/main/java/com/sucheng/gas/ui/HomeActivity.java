@@ -1,26 +1,42 @@
 package com.sucheng.gas.ui;
 
+import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.sucheng.gas.R;
 import com.sucheng.gas.base.BaseActivity;
 import com.sucheng.gas.base.CommentDataBean;
 import com.sucheng.gas.constants.Constants;
+import com.sucheng.gas.constants.Module;
 import com.sucheng.gas.constants.UrlCode;
 import com.sucheng.gas.interfacepack.OnPromptDialogListener;
 import com.sucheng.gas.ui.botmsg.InitBotActivity;
+import com.sucheng.gas.ui.botmsg.InitBotCodeActivity;
 import com.sucheng.gas.ui.botmsg.TrajectoryActivity;
 import com.sucheng.gas.ui.deliver.DeliverOrderActivity;
 import com.sucheng.gas.ui.login.LoginActivity;
 import com.sucheng.gas.ui.login.ManualVersionUpdateActivity;
+import com.sucheng.gas.ui.story.AddStoryFamilyCheckOrderActivity;
+import com.sucheng.gas.ui.story.StoryFamilyCheckOrderActivity;
 import com.sucheng.gas.ui.story.StoryOrderActivity;
+import com.sucheng.gas.ui.wearhouse.WearhouseCheckBotActivity;
 import com.sucheng.gas.ui.wearhouse.WearhouseOutActivity;
+import com.sucheng.gas.utils.FileUtils;
+import com.sucheng.gas.utils.Utils;
 import com.sucheng.gas.utils.VoiceUtils;
 import com.sucheng.gas.utils.http.view.RequestPresent;
 import com.sucheng.gas.utils.http.view.RequestView;
@@ -31,14 +47,20 @@ import com.yanzhenjie.nohttp.rest.JsonObjectRequest;
 import com.yanzhenjie.nohttp.rest.OnResponseListener;
 import com.yanzhenjie.nohttp.rest.RequestQueue;
 import com.yanzhenjie.nohttp.rest.Response;
+
 import org.json.JSONObject;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sucheng.gas.constants.Constants.T50_BUILD;
 import static com.sucheng.gas.utils.ErrorExectionUtils.showErrorMsg;
 
 /**
@@ -97,11 +119,72 @@ public class HomeActivity extends BaseActivity implements RequestView<JSONObject
     CardView homeItem21View;
     @BindView(R.id.homeItem22View)
     CardView homeItem22View;
+    @BindView(R.id.homeItem23View)
+    CardView homeItem23View;
+    @BindView(R.id.homeItem24View)
+    CardView homeItem24View;
+    @BindView(R.id.homeItem25View)
+    CardView homeItem25View;
+    @BindView(R.id.homeItem26View)
+    CardView homeItem26View;
+    @BindView(R.id.homeItem27View)
+    CardView homeItem27View;
+    @BindView(R.id.homeItem28View)
+    CardView homeItem28View;
+    @BindView(R.id.homeItem29View)
+    CardView homeItem29View;
+    @BindView(R.id.homeItem30View)
+    CardView homeItem30View;
+    @BindView(R.id.homeItem31View)
+    CardView homeItem31View;
 
     private RequestPresent requestPressent;
     private List<Integer> listId;// 权限id
 
     private RequestQueue requestQueue;
+
+    @SuppressLint("HandlerLeak")
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Logger.e("-------删除DCIM--" + Environment.getExternalStorageDirectory().getPath() + "/DCIM/Camera/");
+            String foldPath = Environment.getExternalStorageDirectory().getPath()
+                    + "/DCIM/Camera/";
+            if(foldPath != null){
+                File[] imgFiles = new File(foldPath).listFiles();
+                if(imgFiles != null){
+                    if (imgFiles.length > 0) {
+                        for (File f : imgFiles) {
+                            Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                            ContentResolver mContentResolver = getContentResolver();
+                            String where = MediaStore.Images.Media.DATA + "='" + f.getAbsolutePath() + "'";
+                            //删除图片
+                            mContentResolver.delete(uri, where, null);
+                        }
+                    }
+                    FileUtils.deleteAllFiles(new File(foldPath));
+
+                    //更新媒体库
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        Intent mediaScanIntent = new Intent(
+                                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                        Uri contentUri = Uri.fromFile(new File("file://" + Environment.getExternalStorageDirectory()));
+                        mediaScanIntent.setData(contentUri);
+                        sendBroadcast(mediaScanIntent);
+                    } else {
+                        sendBroadcast(new Intent(
+                                Intent.ACTION_MEDIA_MOUNTED,
+                                Uri.parse("file://"
+                                        + Environment.getExternalStorageDirectory())));
+                    }
+                }
+
+
+            }
+
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,9 +197,18 @@ public class HomeActivity extends BaseActivity implements RequestView<JSONObject
 
     }
 
+
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Utils.isContanis(Constants.ht380kBuild, Build.PRODUCT) || Build.PRODUCT.equals(T50_BUILD)) {
+            handler.sendEmptyMessage(0x01);
+        }
     }
 
     private void initData() {
@@ -171,6 +263,19 @@ public class HomeActivity extends BaseActivity implements RequestView<JSONObject
         itemMap.put(10020, homeItem20View);
         itemMap.put(10021, homeItem21View);
         itemMap.put(10022, homeItem22View);
+        itemMap.put(10023, homeItem23View);
+        itemMap.put(10024, homeItem24View);
+        itemMap.put(10025, homeItem25View);
+
+
+        itemMap.put(10042, homeItem26View);
+        itemMap.put(10043, homeItem27View);
+        itemMap.put(10044, homeItem28View);
+
+        itemMap.put(10048, homeItem29View);
+        itemMap.put(10049, homeItem30View);
+
+        itemMap.put(10051, homeItem31View);
         return itemMap;
     }
 
@@ -179,8 +284,11 @@ public class HomeActivity extends BaseActivity implements RequestView<JSONObject
             R.id.homeItem3View, R.id.homeItem4View, R.id.homeItem5View, R.id.homeItem6View,
             R.id.homeItem7View, R.id.homeItem8View, R.id.homeItem9View, R.id.homeItem10View,
             R.id.homeItem11View, R.id.homeItem12View, R.id.homeItem13View, R.id.homeItem14View,
-            R.id.homeItem15View, R.id.homeItem16View,R.id.homeItem17View, R.id.homeItem18View,
-             R.id.homeItem19View, R.id.homeItem20View,R.id.homeItem21View,R.id.homeItem22View})
+            R.id.homeItem15View, R.id.homeItem16View, R.id.homeItem17View, R.id.homeItem18View,
+            R.id.homeItem19View, R.id.homeItem20View, R.id.homeItem21View, R.id.homeItem22View,
+            R.id.homeItem23View, R.id.homeItem24View, R.id.homeItem25View, R.id.homeItem26View,
+            R.id.homeItem27View,R.id.homeItem28View,R.id.homeItem29View,R.id.homeItem30View,
+            R.id.homeItem31View})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.userLoginOutTv:   //注销
@@ -257,11 +365,40 @@ public class HomeActivity extends BaseActivity implements RequestView<JSONObject
                 startIntActivity(StoryOrderActivity.class, "flagCode", UrlCode.WEARHOUSE_NIMING_ZITI.getCode());
                 break;
             case R.id.homeItem21View:   //仓库自提订单列表
-                startIntActivity(DeliverOrderActivity.class,"flagCode",UrlCode.WEARHOUSE_ZITI_ORDERLIST.getCode());
+                startIntActivity(DeliverOrderActivity.class, "flagCode", UrlCode.WEARHOUSE_ZITI_ORDERLIST.getCode());
                 break;
             case R.id.homeItem22View:   //仓库自提订单回单列表
-                startIntActivity(DeliverOrderActivity.class,"flagCode",UrlCode.WEARHOUSE_ZITI_BAC_ORDER_LIST.getCode());
+                startIntActivity(DeliverOrderActivity.class, "flagCode", UrlCode.WEARHOUSE_ZITI_BAC_ORDER_LIST.getCode());
                 break;
+            case R.id.homeItem23View:   //送气工从用户退回重瓶
+                startIntActivity(DeliverOrderActivity.class, "flagCode", UrlCode.DELIVER_REBACK_HEAVYBOT_FROM_CLIENT.getCode());
+                break;
+            case R.id.homeItem24View:   //门店从用户退回重瓶
+                startIntActivity(DeliverOrderActivity.class, "flagCode", UrlCode.STORY_REBACK_HEAVYBOT_FROM_CLIENT.getCode());
+                break;
+            case R.id.homeItem25View:   //门店从送气工退回重瓶
+                startIntActivity(WearhouseOutActivity.class, "flagCode", UrlCode.STORY_REBACK_HEAVYBOT_FROM_DELIVER.getCode());
+                break;
+            case R.id.homeItem26View:   //仓库送检出库
+                startIntActivity(WearhouseCheckBotActivity.class, "flagCode", Module.wearhouse_check_bot_outhouse);
+                break;
+            case R.id.homeItem27View:   //仓库送检入库
+                startIntActivity(WearhouseCheckBotActivity.class, "flagCode", Module.wearhouse_check_bot_inhouse);
+                break;
+            case R.id.homeItem28View:   //门店未派送单
+                startIntActivity(DeliverOrderActivity.class, "flagCode", Module.story_no_send_order);
+                break;
+            case R.id.homeItem29View:   //门店入户安检拍照
+                startIntActivity(AddStoryFamilyCheckOrderActivity.class,"flagCode",Module.story_in_family_check_photo);
+                break;
+            case R.id.homeItem30View:   //门店入户安检订单列表
+                startIntActivity(StoryFamilyCheckOrderActivity.class,"falgCode",Module.story_in_family_order);
+                break;
+            case R.id.homeItem31View:   //初始化二维码
+                startActivity(InitBotCodeActivity.class);
+                break;
+
+
         }
     }
 
@@ -357,9 +494,11 @@ public class HomeActivity extends BaseActivity implements RequestView<JSONObject
         });
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         requestPressent.detach();
     }
+
 }

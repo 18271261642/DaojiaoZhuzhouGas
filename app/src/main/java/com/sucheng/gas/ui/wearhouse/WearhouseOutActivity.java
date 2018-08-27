@@ -141,6 +141,9 @@ public class WearhouseOutActivity extends CommentScanActivity implements Request
                     case Module.deliver_emptybot_to_wearhouse: //从配送工空瓶入库-仓库
 
                         break;
+                    case Module.story_reback_heavybot_from_deliver:     //门店从送气工退回重瓶
+                        showBuilder("请扫描需要退回的重瓶编码", false);
+                        break;
                 }
             }
         }
@@ -246,6 +249,14 @@ public class WearhouseOutActivity extends CommentScanActivity implements Request
                         VoiceUtils.showToastVoice(WearhouseOutActivity.this, R.raw.warning, "请先验证送气工!");
                     }
                     break;
+                case Module.story_reback_heavybot_from_deliver:     //门店从送气工退回重瓶
+                    if (!Utils.isEmpty(deliveryManId)) {
+                        maps.put("deliveryManId",deliveryManId+ "");
+                        requestPresent.getPresentRequestJSONObject(requestQueue, 1, UrlCode.STORY_REBACK_HEAVYBOT_FROM_DELIVER.getCheck(), maps, botCode);
+                    } else {
+                        VoiceUtils.showToastVoice(WearhouseOutActivity.this, R.raw.warning, "请先验证送气工!");
+                    }
+                    break;
             }
 
        }
@@ -334,7 +345,7 @@ public class WearhouseOutActivity extends CommentScanActivity implements Request
                     maps.put("bottleIds", Utils.ListToStr(totlaList));
                     String url = UrlCode.getFlagUrl(flagCode);
                     //仓库强制空瓶入库；仓库气瓶充装
-                    if (flagCode == UrlCode.WEARHOUSE_FORCE_EMPBOTIN.getCode() || flagCode == UrlCode.WEARHOUSE_BOT_TO_FILLING.getCode()) {
+                    if (flagCode == Module.wearhouse_focusemptybot_inhouse || flagCode == Module.wearhouse_filling_emptybot) {
 
                     } else {
                         maps.put("deliveryManId", deliveryManId);

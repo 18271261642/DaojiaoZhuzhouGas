@@ -10,8 +10,14 @@
     <string name="daojiao_name">道滘珠洲燃气</string>
     <string name="hengyuang_gas_name">恒源燃气</string>
     <string name="huayang_gas_name">东莞市华洋燃气有限公司</string>
-    <string name="cpct_gas_name">常平常态</string>
+    <string name="cpct_gas_name">常平常泰</string>
     <string name="ztzy_gas_name">中堂中液</string>
+    <string name="houjie_hl_gas_name">东莞市厚龙燃气有限公司</string>
+    <string name="hj_baoshan_gas_name">黄江宝山燃气</string>
+    <string name="zmtxsj_gas_name">樟木头新世纪</string>
+    <string name="hlds_gas_name">横沥大山</string>
+    <string name="hjcl_gas_name">黄江长隆</string>
+    <string name="meizhou_df_gas_name">梅州市大丰气体</string>
 
 
     <string name="bottleinfo_airbottlecode">气瓶编码：</string>

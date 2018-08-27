@@ -14,7 +14,7 @@ import com.sucheng.gas.R;
 /**
  * 
  * @author:CaiJian
- * @data��  2016-8-25
+ * @data
  */
 public class TestAdapter extends BaseAdapter {
 
