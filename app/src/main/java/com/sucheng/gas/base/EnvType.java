@@ -17,6 +17,7 @@ public class EnvType {
     public static final int HLDS_GAS = 9;       //横沥大山燃气
     public static final int HJCL_GAS = 10;      //黄江长隆燃气
     public static final int MeiZhouDF_GAS = 11; //梅州市大丰气体
+    public static final int MeiZhouDPGP_GAS = 12; //梅州大埔县高陂燃气
 
 
 }

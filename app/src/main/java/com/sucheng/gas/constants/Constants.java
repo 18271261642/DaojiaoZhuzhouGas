@@ -39,6 +39,8 @@ public class Constants {
 
     //梅州大丰气体
     private static final String MEIZHOU_DF_GAS_BASEURL = "http://mzdf.zxlcloud.com/";   //梅州大丰
+    //梅州大埔县高陂燃气
+    private static final String MEIZHOU_DF_GAOPO_GAS_BASEURL = "http://mzdbgb.zxlcloud.com/";
 
 
     //捷宝手持机型号
@@ -95,6 +97,8 @@ public class Constants {
             return BASURL = HJCL_GAS_BASEURL;
         }else if(envType == EnvType.MeiZhouDF_GAS){
             return MEIZHOU_DF_GAS_BASEURL;
+        }else if(envType == EnvType.MeiZhouDPGP_GAS){
+            return MEIZHOU_DF_GAOPO_GAS_BASEURL;
         }
         else{
             return null;
@@ -154,6 +158,9 @@ public class Constants {
              case EnvType.MeiZhouDF_GAS: //梅州大丰
                 heavybotCode = "";
                 break;
+             case EnvType.MeiZhouDPGP_GAS:  //梅州大埔县高陂燃气
+                heavybotCode = "";
+                break;
         }
         return heavybotCode;
     }
@@ -196,6 +203,9 @@ public class Constants {
             case EnvType.MeiZhouDF_GAS: //梅州大丰
                 appName = context.getResources().getString(R.string.meizhou_df_gas_name);
                 break;
+            case EnvType.MeiZhouDPGP_GAS:   //梅州大埔县高陂燃气
+                appName = context.getResources().getString(R.string.meizhou_dp_gaopo_gas_name);
+                break;
         }
         return appName;
     }
@@ -237,6 +247,9 @@ public class Constants {
                 isPick = true;
                 break;
             case EnvType.MeiZhouDF_GAS: //梅州大丰
+                isPick = true;
+                break;
+            case EnvType.MeiZhouDPGP_GAS:   //梅州大埔县高陂燃气
                 isPick = true;
                 break;
         }

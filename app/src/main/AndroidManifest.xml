@@ -20,7 +20,7 @@
         <!--百度地图-->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="W9XCT1j7NvoE69U7DU1H2zwFSx7K9Rrl" />
+            android:value="KZzgGcRQgH2jGqh3qweq9kc4aYhPWdN7" />
 
         <activity android:name=".ui.login.LoginActivity" >
             <intent-filter>
