@@ -130,9 +130,14 @@ public class InitBotCodeActivity extends CommentScanActivity implements RequestV
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.commentTitleScanImg:  //扫描图片按钮
-                Intent intent = new Intent(this, CaptureActivity.class);
-                intent.putExtra("flagCode",1001);
-                startActivityForResult(intent,1001);
+               if(airBotId != -1){
+                   Intent intent = new Intent(this, CaptureActivity.class);
+                   intent.putExtra("flagCode",1001);
+                   startActivityForResult(intent,1001);
+               }else{
+                   VoiceUtils.showToastVoice(this,R.raw.warning,"请按步骤操作!");
+               }
+
                 break;
             case R.id.initbotcode_serachbysealcode: //气瓶编码搜索按钮
                 String botCodeSearch = initbotcodeBottlesealcode.getText().toString().trim();
@@ -147,12 +152,10 @@ public class InitBotCodeActivity extends CommentScanActivity implements RequestV
                 }
                 break;
             case R.id.initNewScanBtn:   //提交按钮
-                if(airBotId != -1 && !Utils.isEmpty(initbotcodeAirbottlecode.getText().toString().trim())
-                        &&!Utils.isEmpty(initbotcodeBottlesealcode.getText().toString().trim())){
+                if(airBotId != -1 && !Utils.isEmpty(initbotcodeAirbottlecode.getText().toString().trim()) && !Utils.isEmpty(initbotcodeBottlesealcode.getText().toString().trim())){
                     showSubAlertDialog();
                 }else{
-                    if(!Utils.isEmpty(initbotcodeAirbottlecode.getText().toString().trim())
-                            &&!Utils.isEmpty(initbotcodeBottlesealcode.getText().toString().trim())){
+                    if(!Utils.isEmpty(initbotcodeBottlesealcode.getText().toString().trim())){
                         showBuilder("请扫描新的二维码",false);
                     }else{
                         VoiceUtils.showToastVoice(this,R.raw.warning,"请按步骤操作!");
@@ -170,8 +173,10 @@ public class InitBotCodeActivity extends CommentScanActivity implements RequestV
         if(requestCode == 1001){
             if(data != null){
                 String resultData = data.getStringExtra("scanResult");
-                if(!Utils.isEmpty(resultData))
+                if(!Utils.isEmpty(resultData)){
                     verticalNewBotCode(resultData);
+                }
+
             }
         }
     }
@@ -199,7 +204,7 @@ public class InitBotCodeActivity extends CommentScanActivity implements RequestV
     @Override
     public void requestSuccessData(int what, Response<JSONObject> response, String bot) {
         closeWatiDialog();
-        Logger.e("-----res="+response.get().toString());
+        Logger.e("-----res="+what+bot);
         try {
             if(response.get().getInt("code") == 200){
                 VoiceUtils.showVoice(this,R.raw.beep);
@@ -252,7 +257,15 @@ public class InitBotCodeActivity extends CommentScanActivity implements RequestV
     @Override
     protected void onStop() {
         super.onStop();
-        requestPresent.detach();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(requestPresent != null){
+            requestPresent.detach();
+        }
     }
 
     private void showSubAlertDialog() {

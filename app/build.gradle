@@ -142,8 +142,8 @@ android {
             applicationId "com.sucheng.meizhoudf"
             manifestPlaceholders = [app_name: "梅州市大丰气体",app_icon: "@drawable/ic_launcher"]
             //manifestPlaceholders = [VALUE :"W9XCT1j7NvoE69U7DU1H2zwFSx7K9Rrl"]
-            versionCode 1
-            versionName "1.0->18/08/21"
+            versionCode 11
+            versionName "2.1->18/08/29"
         }
     }
 
